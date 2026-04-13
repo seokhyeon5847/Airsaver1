@@ -1,0 +1,100 @@
+iata,name,lat,lon
+ICN,Incheon,37.469,126.451
+JFK,New York JFK,40.641,-73.778
+LHR,London Heathrow,51.470,-0.454
+NRT,Tokyo Narita,35.772,140.385
+HND,Tokyo Haneda,35.549,139.779
+LAX,Los Angeles,33.941,-118.408
+CDG,Paris Charles de Gaulle,49.009,2.547
+SIN,Singapore Changi,1.364,103.991
+DXB,Dubai International,25.253,55.365
+HKG,Hong Kong,22.308,113.914
+SFO,San Francisco,37.619,-122.375
+SYD,Sydney,33.939,151.175
+FRA,Frankfurt,50.037,8.562
+AMS,Amsterdam Schiphol,52.310,4.768
+BKK,Bangkok Suvarnabhumi,13.690,100.750
+FCO,Rome Fiumicino,41.800,12.238
+CAN,Guangzhou,23.392,113.299
+IST,Istanbul,41.275,28.741
+ORD,Chicago O'Hare,41.974,-87.907
+DFW,Dallas/Fort Worth,32.899,-97.040
+PVG,Shanghai Pudong,31.144,121.808
+PEK,Beijing Capital,40.079,116.590
+KIX,Osaka Kansai,34.434,135.244
+BNE,Brisbane,27.384,153.117
+MEL,Melbourne,37.673,144.843
+AKL,Auckland,37.008,174.792
+YYZ,Toronto Pearson,43.677,-79.630
+YVR,Vancouver,49.196,-123.181
+MEX,Mexico City,19.436,-99.072
+GRU,Sao Paulo,23.435,-46.473
+EZE,Buenos Aires,34.822,-58.535
+MAD,Madrid Barajas,40.494,-3.567
+BCN,Barcelona,41.297,2.078
+ZRH,Zurich,47.458,8.548
+MUC,Munich,48.353,11.775
+VIE,Vienna,48.110,16.569
+CPH,Copenhagen,55.618,12.650
+ARN,Stockholm Arlanda,59.651,17.918
+HEL,Helsinki,60.317,24.963
+OSL,Oslo,60.197,11.100
+DUB,Dublin,53.421,-6.270
+LIS,Lisbon,38.774,-9.134
+ATH,Athens,37.936,23.944
+WAW,Warsaw,52.165,20.967
+PRG,Prague,50.101,14.263
+BRU,Brussels,50.901,4.484
+DEL,Delhi,28.566,77.103
+BOM,Mumbai,19.089,72.868
+BJS,Beijing,39.904,116.407
+SHA,Shanghai,31.230,121.473
+SZX,Shenzhen,22.639,113.811
+KUL,Kuala Lumpur,2.745,101.709
+MNL,Manila,14.508,121.019
+CGK,Jakarta,6.125,106.655
+SGN,Ho Chi Minh City,10.818,106.663
+HAN,Hanoi,21.221,105.807
+TPE,Taipei Taoyuan,25.079,121.234
+GMP,Seoul Gimpo,37.558,126.790
+PUS,Busan Gimhae,35.179,128.938
+CJU,Jeju International,33.511,126.493
+CTS,Sapporo New Chitose,42.775,141.692
+FUK,Fukuoka,33.585,130.450
+OKA,Okinawa Naha,26.206,127.646
+SEA,Seattle-Tacoma,47.448,-122.309
+SJC,San Jose,37.363,-121.928
+SAN,San Diego,32.733,-117.189
+PHX,Phoenix Sky Harbor,33.434,-112.008
+DEN,Denver,39.856,-104.673
+IAH,Houston,29.980,-95.339
+ATL,Atlanta,33.640,-84.427
+MIA,Miami,25.795,-80.287
+MCO,Orlando,28.428,-81.308
+IAD,Washington Dulles,38.953,-77.456
+BOS,Boston Logan,42.364,-71.005
+PHL,Philadelphia,39.872,-75.241
+CLT,Charlotte,35.214,-80.943
+MSP,Minneapolis,44.884,-93.222
+DTW,Detroit,42.212,-83.353
+SLC,Salt Lake City,40.789,-111.979
+LAS,Las Vegas,36.084,-115.153
+PDX,Portland,45.589,-122.597
+AUH,Abu Dhabi,24.433,54.651
+DOH,Doha Hamad,25.273,51.608
+RUH,Riyadh,24.957,46.698
+JED,Jeddah,21.679,39.156
+MCT,Muscat,23.593,58.284
+KWI,Kuwait,29.226,47.969
+CAI,Cairo,30.121,31.405
+JNB,Johannesburg,26.139,28.246
+CPT,Cape Town,33.971,18.602
+NBO,Nairobi,1.319,36.927
+ADD,Addis Ababa,8.977,38.799
+CMN,Casablanca,33.367,-7.589
+PER,Perth,31.940,115.967
+CHC,Christchurch,43.489,172.532
+MNL,Manila,14.508,121.019
+CEB,Cebu,10.307,123.979
+BKI,Kota Kinabalu,5.937,116.051
+DPS,Bali Denpasar,8.748,115.167

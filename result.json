@@ -1,0 +1,21 @@
+{
+    "status": "success",
+    "departure": {
+        "code": "FUK",
+        "name": "Fukuoka Airport",
+        "city": "Unknown"
+    },
+    "arrival": {
+        "code": "NRT",
+        "name": "Narita International Airport",
+        "city": "Unknown"
+    },
+    "distance_km": 940.47,
+    "fuel_cost_krw": 20130,
+    "estimated_time": "1시간 10분",
+    "carbon_kg": 108.2,
+    "live_data": {
+        "exchange_rate": 1485.5,
+        "fuel_price_kg": 1213.64
+    }
+}
