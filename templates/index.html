@@ -19,7 +19,7 @@
         :root { --bg: #0f1123; --card: #1a1c3a; --accent: #9f66ff; --text: #ffffff; }
         body { background: var(--bg); color: var(--text); font-family: 'Pretendard', sans-serif; display: flex; margin: 0; height: 100vh; overflow: hidden; }
         
-        /* 사이드바 설정 */
+        /* 사이드바 */
         .sidebar { width: 180px; padding: 25px; border-right: 1px solid #333; display: flex; flex-direction: column; gap: 15px; background: rgba(0,0,0,0.2); }
         .mini-card { background: var(--card); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
         .label { font-size: 11px; color: #888; margin-bottom: 5px; }
@@ -36,111 +36,48 @@
         
         button { width: 100%; padding: 18px; background: var(--accent); border: none; color: white; border-radius: 14px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; margin-top: 10px; }
         button:hover { background: #8a4dff; transform: translateY(-2px); }
-        button:disabled { background: #444; cursor: not-allowed; transform: none; }
 
-        /* 🧾 영수증 스타일 결과 섹션 */
+        /* 🧾 영수증 섹션 */
         .res-section { 
-            margin-top: 30px; 
-            background: #ffffff; 
-            color: #1a1c3a; 
-            padding: 30px; 
-            border-radius: 4px; 
-            display: none; 
-            animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1); 
-            font-family: 'Courier New', Courier, monospace; 
-            position: relative;
-            border-top: 10px solid var(--accent);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            margin-top: 30px; background: #ffffff; color: #1a1c3a; padding: 30px; border-radius: 4px; 
+            display: none; animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1); 
+            font-family: 'Courier New', Courier, monospace; position: relative;
+            border-top: 10px solid var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
-        
-        .res-section h3 { 
-            text-align: center; 
-            margin-top: 0; 
-            border-bottom: 2px dashed #ddd; 
-            padding-bottom: 15px; 
-            font-size: 19px;
-            letter-spacing: 3px;
-            color: #1a1c3a;
-        }
-
+        .res-section h3 { text-align: center; margin-top: 0; border-bottom: 2px dashed #ddd; padding-bottom: 15px; font-size: 19px; color: #1a1c3a; }
         .res-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; font-weight: 600; color: #444; }
         .highlight { color: #e74c3c; font-size: 18px; font-weight: 800; }
-        
         .big-label { margin-top: 25px; font-size: 11px; color: #888; text-align: right; border-top: 1px solid #eee; padding-top: 15px; font-family: 'Pretendard'; }
         .big-val { font-size: 28px; font-weight: 900; text-align: right; color: #1a1c3a; margin-top: 5px; font-family: 'Pretendard'; }
         
-        /* 💰 수익형 버튼 영역 */
-        .affiliate-container {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px dashed #ddd;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
+        /* 💰 수익형 버튼 */
+        .affiliate-container { margin-top: 25px; padding-top: 20px; border-top: 1px dashed #ddd; display: flex; flex-direction: column; gap: 10px; }
         .affiliate-btn {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Pretendard', sans-serif;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            letter-spacing: -0.5px;
+            width: 100%; padding: 15px; border: none; border-radius: 8px; font-family: 'Pretendard', sans-serif;
+            font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-
-        /* 세련된 다크/그레이 톤 */
         .btn-flight { background: #2d3436; color: white; }
         .btn-hotel { background: #636e72; color: white; }
-        
-        .affiliate-btn:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.2);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
+        .affiliate-btn:hover { transform: translateY(-2px); filter: brightness(1.2); }
 
-        /* 한국어 지원 면책 조항 */
         .disclaimer-box {
-            font-family: 'Pretendard', sans-serif;
-            font-size: 11px;
-            color: #777;
-            margin-top: 25px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            line-height: 1.6;
-            text-align: justify;
+            font-family: 'Pretendard', sans-serif; font-size: 11px; color: #777; margin-top: 25px; 
+            padding: 15px; background: #f8f9fa; border-radius: 8px; line-height: 1.6; text-align: justify;
         }
-
         .receipt-cut {
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 100%;
-            height: 10px;
-            background: linear-gradient(-45deg, transparent 5px, #ffffff 0), 
-                        linear-gradient(45deg, transparent 5px, #ffffff 0);
+            position: absolute; bottom: -10px; left: 0; width: 100%; height: 10px;
+            background: linear-gradient(-45deg, transparent 5px, #ffffff 0), linear-gradient(45deg, transparent 5px, #ffffff 0);
             background-size: 10px 10px;
         }
-
         #map { height: 100%; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 900px) {
             body { flex-direction: column; height: auto; overflow-y: auto; }
-            .sidebar { width: 100%; flex-direction: row; padding: 15px; box-sizing: border-box; overflow-x: auto; border-right: none; border-bottom: 1px solid #333; }
-            .mini-card { min-width: 100px; padding: 10px; flex: 1; }
+            .sidebar { width: 100%; flex-direction: row; padding: 15px; border-right: none; border-bottom: 1px solid #333; }
             .main { grid-template-columns: 1fr; padding: 15px; }
-            .control-panel { order: 2; }
-            #map { height: 350px; order: 1; }
+            #map { height: 350px; }
         }
     </style>
 </head>
@@ -154,9 +91,9 @@
     <div class="main">
         <div class="control-panel">
             <h2>✈️ AIR SAVE Simulator</h2>
-            <label>출발지 (공항명 또는 IATA 코드)</label>
+            <label>출발지 (공항명 또는 IATA)</label>
             <input id="dep" list="air-list" placeholder="예: 인천 또는 ICN" autocomplete="off">
-            <label>도착지 (공항명 또는 IATA 코드)</label>
+            <label>도착지 (공항명 또는 IATA)</label>
             <input id="arr" list="air-list" placeholder="예: 뉴욕 또는 JFK" autocomplete="off">
             
             <datalist id="air-list">
@@ -190,9 +127,8 @@
                 </div>
 
                 <div class="disclaimer-box">
-                    <strong>주의 및 안내:</strong> 본 수치는 표준 항공유 가격 및 기종별 평균 연비를 대권항로 기준으로 계산한 시뮬레이션 결과입니다. 실제 비행 시에는 기상 상태(풍향, 기온), 관제 지시 경로, 기체 하중(승객 및 화물), 엔진 노후도 등에 따라 실제 비용과 상당한 차이가 발생할 수 있습니다. 정확한 항공권 가격 및 일정은 파트너사 페이지에서 확인해 주시기 바랍니다.
+                    <strong>주의 및 안내:</strong> 본 수치는 표준 연비 및 대권항로(Great Circle Route)를 기준으로 최단 거리를 산출한 시뮬레이션입니다. 실제 비행 시에는 태평양 항로 선택, 기상 조건(제트기류), 기체 하중, 엔진 효율 등에 따라 실제 비용과 상당한 차이가 발생할 수 있습니다.
                 </div>
-
                 <div class="receipt-cut"></div>
             </div>
         </div>
@@ -201,7 +137,8 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        let map = L.map('map').setView([25, 120], 3);
+        // 지도가 무한 반복되고 자연스럽게 이어지도록 설정
+        let map = L.map('map', { worldCopyJump: true }).setView([30, 160], 2);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
         let line, m1, m2;
 
@@ -210,29 +147,16 @@
             document.getElementById('clock').innerText = now.toLocaleTimeString('ko-KR', {hour12: false});
         }
         setInterval(updateClock, 1000);
-        updateClock();
 
-        function goSkyscanner() {
-            // Trip.com 등으로 연결 (승인 대기 중이어도 링크는 이 구조로 세팅)
-            const url = `https://trip.tp.st/8W6fVv1Y?_marker=518542`; 
-            window.open(url, '_blank');
-        }
-
-        function goAgoda() {
-            // 이미 승인된 Klook 등을 활용
-            const url = `https://klook.tp.st/ZlE8O7mN?_marker=518542`;
-            window.open(url, '_blank');
-        }
+        function goSkyscanner() { window.open(`https://trip.tp.st/8W6fVv1Y?_marker=518542`, '_blank'); }
+        function goAgoda() { window.open(`https://klook.tp.st/ZlE8O7mN?_marker=518542`, '_blank'); }
 
         async function analyze() {
             const dep = document.getElementById('dep').value;
             const arr = document.getElementById('arr').value;
             const btn = document.getElementById('sim-btn');
 
-            if(!dep || !arr) {
-                alert("출발지와 도착지 공항을 모두 선택해 주세요!");
-                return;
-            }
+            if(!dep || !arr) { alert("출발지와 도착지를 입력하세요!"); return; }
 
             btn.innerText = "항로 분석 중...";
             btn.disabled = true;
@@ -241,10 +165,7 @@
                 const res = await fetch(`/calculate?dep=${encodeURIComponent(dep)}&arr=${encodeURIComponent(arr)}`);
                 const data = await res.json();
                 
-                if(data.status === "error") {
-                    alert(data.message);
-                    return;
-                }
+                if(data.status === "error") { alert(data.message); return; }
                 
                 document.getElementById('res-box').style.display = 'block';
                 document.getElementById('rd').innerText = data.distance;
@@ -256,34 +177,37 @@
                 const hours = Math.floor(distanceNum / 850);
                 const minutes = Math.round(((distanceNum / 850) - hours) * 60);
                 document.getElementById('rt').innerText = `약 ${hours}시간 ${minutes}분`;
-
-                const co2 = (distanceNum * 0.000115).toFixed(2);
-                document.getElementById('rco2').innerText = `약 ${co2} 톤`;
+                document.getElementById('rco2').innerText = `약 ${(distanceNum * 0.000115).toFixed(2)} 톤`;
                 
                 if(line) map.removeLayer(line);
                 if(m1) map.removeLayer(m1);
                 if(m2) map.removeLayer(m2);
                 
-                m1 = L.marker(data.coords.dep).addTo(map);
-                m2 = L.marker(data.coords.arr).addTo(map);
+                let p1 = data.coords.dep;
+                let p2 = data.coords.arr;
+
+                m1 = L.marker(p1).addTo(map);
+                m2 = L.marker(p2).addTo(map);
+
+                // 🌎 태평양 경로 보정 로직
+                let latlngs = [p1, p2];
+                let lonDiff = Math.abs(p1[1] - p2[1]);
+
+                // 경도 차이가 180도보다 크면 반대쪽(태평양 방향)으로 연결
+                if (lonDiff > 180) {
+                    let newLon2 = p2[1] > p1[1] ? p2[1] - 360 : p2[1] + 360;
+                    latlngs = [p1, [p2[0], newLon2]];
+                }
                 
-                line = L.polyline([data.coords.dep, data.coords.arr], {
+                line = L.polyline(latlngs, {
                     color: '#9f66ff', weight: 3, dashArray: '10, 10'
                 }).addTo(map);
                 
-                map.fitBounds(line.getBounds(), {padding: [50, 50]});
+                map.fitBounds(line.getBounds(), {padding: [100, 100]});
 
-            } catch (e) {
-                alert("서버 통신 오류가 발생했습니다.");
-            } finally {
-                btn.innerText = "시뮬레이션 시작";
-                btn.disabled = false;
-            }
+            } catch (e) { alert("서버 오류가 발생했습니다."); }
+            finally { btn.innerText = "시뮬레이션 시작"; btn.disabled = false; }
         }
-
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('focus', function() { this.select(); });
-        });
     </script>
 </body>
 </html>
