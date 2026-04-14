@@ -155,13 +155,19 @@ AIRPORTS_DB = {
 
 @app.route('/')
 def home():
-    # 리스트 생성 (한국어 우선: "한국어명 (IATA)")
+    # 리스트 생성 (가나다순 정렬)
     air_list = sorted([f"{v['name']} ({k})" for k, v in AIRPORTS_DB.items()])
     
     try:
-        rate = requests.get('https://open.er-api.com/v6/latest/USD', timeout=2).json()['rates']['KRW']
-    except:
-        rate = 1450.0 # 환율 서버 에러 시 기본값
+        # 실시간 환율 호출
+        rate_res = requests.get('https://open.er-api.com/v6/latest/USD', timeout=2)
+        rate = rate_res.json()['rates']['KRW']
+    except Exception as e:
+        print(f"환율 호출 에러: {e}")
+        rate = 1450.0 # 에러 발생 시 기본값
+    
+    # 소수점 첫째자리까지 반올림
+    rate = round(rate, 1)
     
     return render_template('index.html', airports=air_list, rate=rate)
 
@@ -170,7 +176,7 @@ def calculate():
     dep_raw = request.args.get('dep', '').strip()
     arr_raw = request.args.get('arr', '').strip()
 
-    # 정규식으로 괄호 안의 IATA 코드 추출 (한국어/영어 모두 대응)
+    # 정규식으로 괄호 안의 IATA 코드 추출
     def extract_code(text):
         match = re.search(r'\(([A-Z]{3})\)', text.upper())
         return match.group(1) if match else None
@@ -179,28 +185,32 @@ def calculate():
     a_code = extract_code(arr_raw)
 
     if not d_code or d_code not in AIRPORTS_DB:
-        return jsonify({"status": "error", "message": "출발 공항을 리스트에서 정확히 선택해주세요!"})
+        return jsonify({"status": "error", "message": "출발 공항을 정확히 선택해주세요!"})
     if not a_code or a_code not in AIRPORTS_DB:
-        return jsonify({"status": "error", "message": "도착 공항을 리스트에서 정확히 선택해주세요!"})
+        return jsonify({"status": "error", "message": "도착 공항을 정확히 선택해주세요!"})
     if d_code == a_code:
         return jsonify({"status": "error", "message": "출발지와 도착지가 같습니다!"})
 
     p1, p2 = AIRPORTS_DB[d_code], AIRPORTS_DB[a_code]
     
-    # 하버사인 공식 (지구 곡률 반영 거리 계산)
-    dist = 6371 * 2 * math.asin(math.sqrt(math.sin(math.radians(p2['lat']-p1['lat'])/2)**2 + 
-           math.cos(math.radians(p1['lat']))*math.cos(math.radians(p2['lat']))*math.sin(math.radians(p2['lon']-p1['lon'])/2)**2))
+    # 하버사인 공식 (거리 계산)
+    lat1, lon1 = math.radians(p1['lat']), math.radians(p1['lon'])
+    lat2, lon2 = math.radians(p2['lat']), math.radians(p2['lon'])
     
-    # 항공로 보정 계수 (8%)
-    dist = dist * 1.08
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    
+    a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
+    c = 2 * math.asin(math.sqrt(a))
+    dist = 6371 * c * 1.08  # 항공로 보정 계수 포함
 
-    # 거리별 투입 기종 및 연비 설정
+    # 기종 선정 로직
     if dist > 11000: air, seat, f = "Airbus A380-800", 407, 0.72
     elif dist > 8000: air, seat, f = "Boeing 787-9 Dreamliner", 269, 0.60
     elif dist > 4000: air, seat, f = "Airbus A330-300", 284, 0.65
     else: air, seat, f = "Airbus A321neo", 182, 0.52
 
-    # 유류비 계산 (갤런당 $2.84 기준)
+    # 유류비 계산 (갤런당 $2.84 고정가정)
     cost_usd = (dist / 100) * f * 2.84
     
     try:
@@ -218,5 +228,6 @@ def calculate():
     })
 
 if __name__ == '__main__':
-    # 기장님 맥북 환경에 맞춰 포트 5001로 설정 (에어플레이 간섭 방지)
+    # 맥북 포트 충돌 방지 및 디버그 모드 활성화
     app.run(debug=True, port=5001)
+    
