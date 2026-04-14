@@ -38,45 +38,86 @@
         button:hover { background: #8a4dff; transform: translateY(-2px); }
         button:disabled { background: #444; cursor: not-allowed; transform: none; }
 
-        /* 🧾 영수증 스타일 결과 섹션 */
+        /* 🧾 영수증 스타일 결과 섹션 (모던하게 수정) */
         .res-section { 
             margin-top: 30px; 
-            background: #fdfdfd; 
+            background: #ffffff; 
             color: #1a1c3a; 
-            padding: 25px; 
+            padding: 30px; 
             border-radius: 4px; 
             display: none; 
-            animation: fadeIn 0.5s ease; 
+            animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1); 
             font-family: 'Courier New', Courier, monospace; 
             position: relative;
-            border-top: 8px solid var(--accent);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-top: 10px solid var(--accent);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
         
         .res-section h3 { 
             text-align: center; 
             margin-top: 0; 
-            border-bottom: 2px dashed #bbb; 
+            border-bottom: 2px dashed #ddd; 
             padding-bottom: 15px; 
-            font-size: 18px;
-            letter-spacing: 2px;
+            font-size: 19px;
+            letter-spacing: 3px;
+            color: #1a1c3a;
         }
 
-        .res-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; font-weight: bold; }
-        .highlight { color: #d9534f; font-size: 18px; }
+        .res-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; font-weight: 600; color: #444; }
+        .highlight { color: #e74c3c; font-size: 18px; font-weight: 800; }
         
-        .big-label { margin-top: 20px; font-size: 12px; color: #666; text-align: right; border-top: 1px solid #333; padding-top: 15px; }
-        .big-val { font-size: 26px; font-weight: bold; text-align: right; color: #1a1c3a; margin-top: 5px; }
+        .big-label { margin-top: 25px; font-size: 11px; color: #888; text-align: right; border-top: 1px solid #eee; padding-top: 15px; font-family: 'Pretendard'; }
+        .big-val { font-size: 28px; font-weight: 900; text-align: right; color: #1a1c3a; margin-top: 5px; font-family: 'Pretendard'; }
         
-        /* 💰 수익형 버튼 스타일 */
-        .affiliate-btn {
-            width: 100%; padding: 14px; margin-top: 10px; border: none; border-radius: 10px;
-            font-weight: bold; cursor: pointer; font-family: 'Pretendard'; transition: 0.2s;
-            font-size: 14px;
+        /* 💰 세련된 수익형 버튼 영역 */
+        .affiliate-container {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px dashed #ddd;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
-        .btn-skyscanner { background: #00d3ad; color: white; }
-        .btn-agoda { background: #ff567d; color: white; }
-        .affiliate-btn:hover { opacity: 0.9; transform: scale(1.02); }
+
+        .affiliate-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Pretendard', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        /* 촌스러운 색상 제거 -> 모던한 다크 톤 */
+        .btn-flight { background: #2d3436; color: white; }
+        .btn-hotel { background: #636e72; color: white; }
+        
+        .affiliate-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* 세밀한 면책 조항 디자인 */
+        .disclaimer-box {
+            font-family: 'Pretendard', sans-serif;
+            font-size: 11px;
+            color: #777;
+            margin-top: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            line-height: 1.6;
+            text-align: justify;
+        }
 
         .receipt-cut {
             position: absolute;
@@ -84,8 +125,8 @@
             left: 0;
             width: 100%;
             height: 10px;
-            background: linear-gradient(-45deg, transparent 5px, #fdfdfd 0), 
-                        linear-gradient(45deg, transparent 5px, #fdfdfd 0);
+            background: linear-gradient(-45deg, transparent 5px, #ffffff 0), 
+                        linear-gradient(45deg, transparent 5px, #ffffff 0);
             background-size: 10px 10px;
         }
 
@@ -125,25 +166,31 @@
             <button id="sim-btn" onclick="analyze()">시뮬레이션 시작</button>
 
             <div id="res-box" class="res-section">
-                <h3>운항 비용 영수증</h3>
-                <div class="res-row"><span>투입 기종:</span><span id="ra">-</span></div>
-                <div class="res-row"><span>비행 거리:</span><span id="rd">-</span></div>
-                <div class="res-row"><span>예상 시간:</span><span id="rt">-</span></div>
-                <div class="res-row"><span>탄소 배출:</span><span id="rco2">-</span></div>
-                <div class="res-row" style="margin-top:10px;"><span>총 유류비용:</span><span id="rtc" class="highlight">-</span></div>
+                <h3>FLIGHT RECEIPT</h3>
+                <div class="res-row"><span>AIRCRAFT TYPE</span><span id="ra">-</span></div>
+                <div class="res-row"><span>DISTANCE (KM)</span><span id="rd">-</span></div>
+                <div class="res-row"><span>EST. FLIGHT TIME</span><span id="rt">-</span></div>
+                <div class="res-row"><span>CO2 EMISSIONS</span><span id="rco2">-</span></div>
+                <div class="res-row" style="margin-top:10px; border-top: 1px solid #eee; padding-top: 10px;">
+                    <span>TOTAL FUEL COST</span><span id="rtc" class="highlight">-</span>
+                </div>
                 
-                <div class="big-label">1인당 예상 유류비 (원가)</div>
+                <div class="big-label">ESTIMATED FUEL COST PER PAX (NET)</div>
                 <div id="rpc" class="big-val">-</div>
 
-                <div style="margin-top: 20px; border-top: 1px dashed #bbb; padding-top: 15px;">
-                    <button class="affiliate-btn btn-skyscanner" onclick="goSkyscanner()">🎫 최저가 항공권 확인</button>
-                    <button class="affiliate-btn btn-agoda" onclick="goAgoda()">🏨 도착지 호텔 특가</button>
+                <div class="affiliate-container">
+                    <button class="affiliate-btn btn-flight" onclick="goSkyscanner()">
+                        <span>✈️</span> CHECK LOWEST AIRFARE
+                    </button>
+                    <button class="affiliate-btn btn-hotel" onclick="goAgoda()">
+                        <span>🏨</span> FIND DESTINATION HOTELS
+                    </button>
                 </div>
 
-                <p style="font-size: 10px; color: #888; margin-top: 20px; text-align: center; line-height: 1.4;">
-                    *본 시뮬레이션은 실시간 데이터를 기반으로 작성되었습니다.<br>
-                    AIR SAVE와 함께 안전한 비행 되세요.
-                </p>
+                <div class="disclaimer-box">
+                    <strong>LEGAL NOTICE:</strong> 본 데이터는 항공유 가격, 표준 연비 및 대권항로를 기반으로 한 단순 시뮬레이션 수치입니다. 실제 운항 시에는 기상 조건(풍향/풍속), 관제 경로, 기체 하중 및 엔진 효율에 따라 결과가 상이할 수 있습니다. 제공되는 운임 정보는 파트너사를 통해 실시간으로 확인하시기 바랍니다.
+                </div>
+
                 <div class="receipt-cut"></div>
             </div>
         </div>
@@ -163,19 +210,21 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 💰 수익형 링크 연결 함수
         function goSkyscanner() {
             const arrInput = document.getElementById('arr').value;
-            const iata = arrInput.split('(').pop().replace(')', '').trim();
-            // Travelpayouts 파트너 링크 (마커 518542 적용)
-            const url = `https://wayaway.tp.st/P9V2H1oX?_marker=518542&destination=${iata}`;
+            const iataMatch = arrInput.match(/\(([^)]+)\)/);
+            const iata = iataMatch ? iataMatch[1] : "";
+            // 현재 Connected 상태인 Klook 또는 승인 대기 중인 Trip.com 구조에 맞게 연결
+            const url = `https://trip.tp.st/8W6fVv1Y?_marker=518542`; 
             window.open(url, '_blank');
         }
 
         function goAgoda() {
             const arrInput = document.getElementById('arr').value;
-            const iata = arrInput.split('(').pop().replace(')', '').trim();
-            const url = `https://agoda.tp.st/VfR5Z2vK?_marker=518542&city=${iata}`;
+            const iataMatch = arrInput.match(/\(([^)]+)\)/);
+            const iata = iataMatch ? iataMatch[1] : "";
+            // 이미 Connected 상태인 Klook 메인/호텔 페이지 활용
+            const url = `https://klook.tp.st/ZlE8O7mN?_marker=518542`;
             window.open(url, '_blank');
         }
 
@@ -189,7 +238,7 @@
                 return;
             }
 
-            btn.innerText = "데이터 분석 중...";
+            btn.innerText = "분석 중...";
             btn.disabled = true;
 
             try {
