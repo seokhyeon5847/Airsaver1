@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIR SAVE | 항로 시뮬레이터</title>
+    
+    <script nowprocket data-noptimize="1" data-cfasync="false" data-wpfc-render="false" seraph-accel-crit="1" data-no-defer="1">
+      (function () {
+          var script = document.createElement("script");
+          script.async = 1;
+          script.src = 'https://tp-em.com/NTE4NTQy.js?t=518542';
+          document.head.appendChild(script);
+      })();
+    </script>
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root { --bg: #0f1123; --card: #1a1c3a; --accent: #9f66ff; --text: #ffffff; }
@@ -58,7 +68,16 @@
         .big-label { margin-top: 20px; font-size: 12px; color: #666; text-align: right; border-top: 1px solid #333; padding-top: 15px; }
         .big-val { font-size: 26px; font-weight: bold; text-align: right; color: #1a1c3a; margin-top: 5px; }
         
-        /* 영수증 하단 지그재그 컷팅 */
+        /* 💰 수익형 버튼 스타일 */
+        .affiliate-btn {
+            width: 100%; padding: 14px; margin-top: 10px; border: none; border-radius: 10px;
+            font-weight: bold; cursor: pointer; font-family: 'Pretendard'; transition: 0.2s;
+            font-size: 14px;
+        }
+        .btn-skyscanner { background: #00d3ad; color: white; }
+        .btn-agoda { background: #ff567d; color: white; }
+        .affiliate-btn:hover { opacity: 0.9; transform: scale(1.02); }
+
         .receipt-cut {
             position: absolute;
             bottom: -10px;
@@ -72,7 +91,6 @@
 
         #map { height: 100%; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); }
 
-        /* 📱 모바일 반응형 */
         @media (max-width: 900px) {
             body { flex-direction: column; height: auto; overflow-y: auto; }
             .sidebar { width: 100%; flex-direction: row; padding: 15px; box-sizing: border-box; overflow-x: auto; border-right: none; border-bottom: 1px solid #333; }
@@ -117,6 +135,11 @@
                 <div class="big-label">1인당 예상 유류비 (원가)</div>
                 <div id="rpc" class="big-val">-</div>
 
+                <div style="margin-top: 20px; border-top: 1px dashed #bbb; padding-top: 15px;">
+                    <button class="affiliate-btn btn-skyscanner" onclick="goSkyscanner()">🎫 최저가 항공권 확인</button>
+                    <button class="affiliate-btn btn-agoda" onclick="goAgoda()">🏨 도착지 호텔 특가</button>
+                </div>
+
                 <p style="font-size: 10px; color: #888; margin-top: 20px; text-align: center; line-height: 1.4;">
                     *본 시뮬레이션은 실시간 데이터를 기반으로 작성되었습니다.<br>
                     AIR SAVE와 함께 안전한 비행 되세요.
@@ -139,6 +162,22 @@
         }
         setInterval(updateClock, 1000);
         updateClock();
+
+        // 💰 수익형 링크 연결 함수
+        function goSkyscanner() {
+            const arrInput = document.getElementById('arr').value;
+            const iata = arrInput.split('(').pop().replace(')', '').trim();
+            // Travelpayouts 파트너 링크 (마커 518542 적용)
+            const url = `https://wayaway.tp.st/P9V2H1oX?_marker=518542&destination=${iata}`;
+            window.open(url, '_blank');
+        }
+
+        function goAgoda() {
+            const arrInput = document.getElementById('arr').value;
+            const iata = arrInput.split('(').pop().replace(')', '').trim();
+            const url = `https://agoda.tp.st/VfR5Z2vK?_marker=518542&city=${iata}`;
+            window.open(url, '_blank');
+        }
 
         async function analyze() {
             const dep = document.getElementById('dep').value;
@@ -168,13 +207,11 @@
                 document.getElementById('rtc').innerText = data.total_cost_display;
                 document.getElementById('rpc').innerText = data.per_person_display;
 
-                // 비행시간 계산 (한글 표시)
                 const distanceNum = parseFloat(data.distance.replace(/,/g, ''));
                 const hours = Math.floor(distanceNum / 850);
                 const minutes = Math.round(((distanceNum / 850) - hours) * 60);
                 document.getElementById('rt').innerText = `약 ${hours}시간 ${minutes}분`;
 
-                // 탄소 배출량 계산 (한글 표시)
                 const co2 = (distanceNum * 0.000115).toFixed(2);
                 document.getElementById('rco2').innerText = `약 ${co2} 톤`;
                 
