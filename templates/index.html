@@ -3,225 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIR SAVE | 항로 시뮬레이터</title>
-    
-    <script nowprocket data-noptimize="1" data-cfasync="false" data-wpfc-render="false" seraph-accel-crit="1" data-no-defer="1">
-      (function () {
-          var script = document.createElement("script");
-          script.async = 1;
-          script.src = 'https://tp-em.com/NTE4NTQy.js?t=518542';
-          document.head.appendChild(script);
-      })();
-    </script>
-
+    <title>{{ seo_title if seo_title else "OilTax Cloud | 2026 실시간 항공권 가격 검증" }}</title>
+    <meta name="description" content="실시간 항공유 가격과 환율을 바탕으로 항공사 유류할증료의 거품을 분석합니다.">
+    <script async src='https://tp-em.com/NTE4NTQy.js?t=518542'></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-ant-path@1.3.0/dist/leaflet-ant-path.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         :root { --bg: #0f1123; --card: #1a1c3a; --accent: #9f66ff; --text: #ffffff; }
         body { background: var(--bg); color: var(--text); font-family: 'Pretendard', sans-serif; display: flex; margin: 0; height: 100vh; overflow: hidden; }
-        
-        /* 사이드바 */
-        .sidebar { width: 180px; padding: 25px; border-right: 1px solid #333; display: flex; flex-direction: column; gap: 15px; background: rgba(0,0,0,0.2); }
+        .sidebar { width: 220px; padding: 25px; border-right: 1px solid #333; display: flex; flex-direction: column; gap: 15px; background: rgba(0,0,0,0.2); }
         .mini-card { background: var(--card); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
         .label { font-size: 11px; color: #888; margin-bottom: 5px; }
         .val { font-size: 16px; font-weight: bold; color: var(--accent); }
-
-        /* 메인 레이아웃 */
-        .main { flex: 1; padding: 20px; display: grid; grid-template-columns: 420px 1fr; gap: 20px; }
+        .hot-routes { margin-top: 10px; padding: 15px; background: rgba(159, 102, 255, 0.08); border-radius: 15px; border: 1px solid rgba(159, 102, 255, 0.3); }
+        .hot-item { font-size: 12px; margin-bottom: 8px; color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; }
+        .hot-item b { color: var(--accent); font-weight: 800; }
+        .main { flex: 1; padding: 20px; display: grid; grid-template-columns: 430px 1fr; gap: 20px; }
         .control-panel { background: var(--card); padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h2 { text-align: center; margin-bottom: 25px; font-size: 22px; letter-spacing: -1px; }
-        
-        label { font-size: 13px; color: #aaa; margin-left: 5px; }
-        input { width: 100%; padding: 14px; margin: 8px 0 20px 0; background: #0f1123; color: white; border: 1px solid #444; border-radius: 12px; box-sizing: border-box; font-size: 15px; transition: 0.3s; }
-        input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 10px rgba(159, 102, 255, 0.3); }
-        
-        button { width: 100%; padding: 18px; background: var(--accent); border: none; color: white; border-radius: 14px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; margin-top: 10px; }
-        button:hover { background: #8a4dff; transform: translateY(-2px); }
-
-        /* 🧾 영수증 섹션 */
-        .res-section { 
-            margin-top: 30px; background: #ffffff; color: #1a1c3a; padding: 30px; border-radius: 4px; 
-            display: none; animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1); 
-            font-family: 'Courier New', Courier, monospace; position: relative;
-            border-top: 10px solid var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-        .res-section h3 { text-align: center; margin-top: 0; border-bottom: 2px dashed #ddd; padding-bottom: 15px; font-size: 19px; color: #1a1c3a; }
+        h2 { text-align: center; margin-bottom: 25px; font-size: 24px; }
+        input { width: 100%; padding: 14px; margin: 8px 0 20px 0; background: #0f1123; color: white; border: 1px solid #444; border-radius: 12px; box-sizing: border-box; }
+        button#sim-btn { width: 100%; padding: 18px; background: var(--accent); border: none; color: white; border-radius: 14px; cursor: pointer; font-weight: bold; font-size: 17px; }
+        .res-section { margin-top: 30px; background: #ffffff; color: #1a1c3a; padding: 30px; border-radius: 4px; display: none; font-family: 'Courier New', monospace; position: relative; border-top: 10px solid var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.4); padding-bottom: 40px; }
         .res-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; font-weight: 600; color: #444; }
-        .highlight { color: #e74c3c; font-size: 18px; font-weight: 800; }
-        .big-val { font-size: 28px; font-weight: 900; text-align: right; color: #1a1c3a; margin-top: 5px; font-family: 'Pretendard'; }
-        
-        /* 💰 수익형 버튼 */
-        .affiliate-container { margin-top: 25px; padding-top: 20px; border-top: 1px dashed #ddd; display: flex; flex-direction: column; gap: 10px; }
-        .affiliate-btn {
-            width: 100%; padding: 15px; border: none; border-radius: 8px; font-family: 'Pretendard', sans-serif;
-            font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .btn-flight { background: #2d3436; color: white; }
-        .btn-hotel { background: #636e72; color: white; }
-        .affiliate-btn:hover { transform: translateY(-2px); filter: brightness(1.2); }
-
-        /* 🏢 사이드 정보 섹션 (기장님 추가 요청 사항) */
-        .site-info { 
-            margin-top: 40px; padding: 25px; background: rgba(255, 255, 255, 0.03); 
-            border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.05); 
-            font-size: 12.5px; color: #bbb; line-height: 1.7; 
-        }
-        .site-info h3 { font-size: 16px; color: var(--accent); margin-bottom: 12px; text-align: left; letter-spacing: -0.5px; }
-        .site-info strong { color: #fff; }
-        .site-info a { color: var(--accent); text-decoration: none; font-weight: bold; }
-        .site-info a:hover { text-decoration: underline; }
-
-        .disclaimer-box {
-            font-family: 'Pretendard', sans-serif; font-size: 11px; color: #777; margin-top: 20px; 
-            padding: 15px; background: #f8f9fa; border-radius: 8px; line-height: 1.6; text-align: justify;
-        }
-        .receipt-cut {
-            position: absolute; bottom: -10px; left: 0; width: 100%; height: 10px;
-            background: linear-gradient(-45deg, transparent 5px, #ffffff 0), linear-gradient(45deg, transparent 5px, #ffffff 0);
-            background-size: 10px 10px;
-        }
-        #map { height: 100%; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 900px) {
-            body { flex-direction: column; height: auto; overflow-y: auto; }
-            .sidebar { width: 100%; flex-direction: row; padding: 15px; border-right: none; border-bottom: 1px solid #333; }
-            .main { grid-template-columns: 1fr; padding: 15px; }
-            #map { height: 350px; }
-        }
+        .big-val { font-size: 30px; font-weight: 900; text-align: right; color: #1a1c3a; margin-top: 5px; }
+        .bagaji-box { margin: 20px 0; padding: 18px; background: #0f1123; color: #fff; border-radius: 12px; text-align: center; border: 1px solid var(--accent); }
+        .bagaji-val { font-size: 34px; font-weight: 900; }
+        .carbon-box { background: #f0fdf4; border: 1px dashed #22c55e; padding: 10px; border-radius: 8px; margin-bottom: 20px; font-size: 12px; color: #166534; display: flex; justify-content: space-between; }
+        .paradox-box { margin-top: 15px; padding: 12px; background: #f8f9fa; border-left: 4px solid #1a1c3a; font-size: 12px; color: #555; }
+        .share-btn { width: 100%; padding: 12px; background: linear-gradient(45deg, #9f66ff, #ff66f0); border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; margin-bottom: 12px; }
+        .btn-check-price { width: 100%; padding: 18px; background: #1a1c3a; color: white; border: 2px solid var(--accent); border-radius: 10px; cursor: pointer; font-weight: 800; font-size: 16px; }
+        .receipt-cut { position: absolute; bottom: -10px; left: 0; width: 100%; height: 10px; background: linear-gradient(-45deg, transparent 5px, #ffffff 0), linear-gradient(45deg, transparent 5px, #ffffff 0); background-size: 10px 10px; }
+        #map { height: 100%; border-radius: 25px; }
+        .disclaimer-final { margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 15px; font-size: 11px; color: #777; line-height: 1.7; }
+        @media (max-width: 900px) { body { flex-direction: column; height: auto; overflow-y: auto; } .sidebar { width: 100%; flex-direction: row; padding: 15px; flex-wrap: wrap; justify-content: center; } .main { grid-template-columns: 1fr; } #map { height: 50vh; } }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <div class="mini-card"><div class="label">항공유(JET A-1)</div><div class="val">$2.84</div></div>
-        <div class="mini-card"><div class="label">적용 환율</div><div class="val">{{ rate }}원</div></div>
-        <div class="mini-card"><div class="label">현재 시간</div><div id="clock" class="val">--:--:--</div></div>
+        <div class="mini-card"><div class="label">실시간 항공유</div><div class="val">${{ "%.2f"|format(fuel_price) }} ⛽</div></div>
+        <div class="mini-card"><div class="label">적용 환율</div><div class="val">₩{{ rate|round|int }} 💵</div></div>
+        <div class="hot-routes">
+            <div class="label" style="color:var(--accent); font-weight:bold;">🔥 인기 노선 TOP 5</div>
+            {% for route in hot_routes %}<div class="hot-item"><b>{{ loop.index }}위</b> {{ route }}</div>{% endfor %}
+        </div>
+        <div id="clock" style="font-size: 12px; color: #555; text-align: center; margin-top: auto;">--:--:--</div>
     </div>
-
     <div class="main">
         <div class="control-panel">
-            <h2>✈️ AIR SAVE Simulator</h2>
-            <label>출발지 (공항명 또는 IATA)</label>
-            <input id="dep" list="air-list" placeholder="예: 인천 또는 ICN" autocomplete="off">
-            <label>도착지 (공항명 또는 IATA)</label>
-            <input id="arr" list="air-list" placeholder="예: 뉴욕 또는 JFK" autocomplete="off">
-            
-            <datalist id="air-list">
-                {% for item in airports %}
-                <option value="{{ item }}">
-                {% endfor %}
-            </datalist>
-
-            <button id="sim-btn" onclick="analyze()">시뮬레이션 시작</button>
-
+            <h2>✈️ OilTax Cloud</h2>
+            <input id="dep" list="air-list" placeholder="출발지" value="{{ pre_dep if pre_dep else '' }}" autocomplete="off">
+            <input id="arr" list="air-list" placeholder="도착지" value="{{ pre_arr if pre_arr else '' }}" autocomplete="off">
+            <datalist id="air-list">{% for item in airports %}<option value="{{ item }}">{% endfor %}</datalist>
+            <button id="sim-btn" onclick="analyze()">항공권 가격 검증하기</button>
             <div id="res-box" class="res-section">
-                <h3>운항 비용 영수증</h3>
-                <div class="res-row"><span>투입 기종 (AIRCRAFT)</span><span id="ra">-</span></div>
-                <div class="res-row"><span>비행 거리 (DISTANCE)</span><span id="rd">-</span></div>
-                <div class="res-row"><span>예상 시간 (TIME)</span><span id="rt">-</span></div>
-                <div class="res-row"><span>탄소 배출 (CO2)</span><span id="rco2">-</span></div>
-                <div class="res-row" style="margin-top:10px; border-top: 1px solid #eee; padding-top: 10px;">
-                    <span>총 유류 비용 (FUEL)</span><span id="rtc" class="highlight">-</span>
+                <div style="text-align:center; font-weight: 800; border-bottom: 2px solid #1a1c3a; padding-bottom: 10px; margin-bottom: 15px;">2026 OFFICIAL VERIFICATION</div>
+                <div id="capture-area">
+                    <div class="res-row"><span>기종</span><span id="ra">-</span></div>
+                    <div class="res-row"><span>거리</span><span id="rd">-</span></div>
+                    <div class="res-row"><span>비행 시간</span><span id="rt">-</span></div>
+                    <div class="res-row"><span>환율</span><span id="rex">-</span></div>
+                    <div class="bagaji-box"><div style="font-size: 12px; color: var(--accent); margin-bottom: 5px;">유류세 바가지 지수</div><div id="bagaji-val" class="bagaji-val">0%</div></div>
+                    <div style="text-align:right; font-size:11px; color:#888;">1인당 순수 유류 원가 (NET)</div><div id="rpc" class="big-val" style="margin-bottom: 15px;">-</div>
                 </div>
-                
-                <div style="text-align:right; font-size:11px; color:#888; margin-top:25px; border-top: 1px solid #eee; padding-top: 15px;">1인당 예상 유류비 (NET)</div>
-                <div id="rpc" class="big-val">-</div>
-
-                <div class="affiliate-container">
-                    <button class="affiliate-btn btn-flight" onclick="goSkyscanner()">
-                        <span>✈️</span> 실시간 최저가 항공권 찾기
-                    </button>
-                    <button class="affiliate-btn btn-hotel" onclick="goAgoda()">
-                        <span>🏨</span> 도착지 호텔 특가 확인하기
-                    </button>
-                </div>
-
-                <div class="disclaimer-box">
-                    <strong>주의 및 안내:</strong> 본 수치는 표준 연비 및 대권항로를 기준으로 산출되었습니다. 실제 비용은 기상 조건, 제트기류, 기체 하중 및 엔진 효율에 따라 차이가 발생할 수 있습니다.
-                </div>
+                <div class="carbon-box"><span>🌱 탄소 배출량</span><span id="carbon-val">-- kg</span></div>
+                <div class="paradox-box">💡 <b>바가지 지수의 역설:</b> 
+"항공사는 연료비 원가의 상당 부분을 이미 '기본 운임' 에 포함시켜 판매합니다. 따라서 본 시뮬레이터의 바가지 지수가 100% 미만으로 나타나더라도, 
+이는 항공사가 착하다는 뜻이 아닙니다. 오히려 기름값 원가를 티켓값과 할증료 양쪽에서 이중으로 청구하고 있음을 시사하는 강력한 지표입니다. 
+당신이 낸 할증료, 과연 순수하게 기름값으로만 쓰이고 있을까요</div>
+                <button class="share-btn" style="margin-top:20px;" onclick="shareCard()">✨ 결과 이미지 저장</button>
+                <button class="btn-check-price" onclick="window.open('https://trip.tp.st/8W6fVv1Y?_marker=518542')">✈️ 실시간 최저가 확인</button>
                 <div class="receipt-cut"></div>
             </div>
+            <div class="disclaimer-final">
+                <strong>[법적 고지]</strong><br>1. 본 서비스는 IATA(국제항공운송협회)의 표준 연비 모델과 IndexMundi의 실시간 항공유(Jet Fuel) 지표, 그리고 실시간 환율 데이터를 바탕으로 산출된 통계적 시뮬레이션입니다. 
+                2. 이 포스팅은 제휴 마케팅 활동의 일환으로 수수료를 제공받을 수 있습니다. 
+                산출된 '연료 원가'는 항공기의 기재 노후도, 당일 기상 상태(풍향/풍속), 관제 허가 경로의 우회 여부 및 실제 탑승객 수에 따라 실제 수치와 차이가 발생할 수 있습니다. 
+                바가지 지수'는 항공사가 공시한 유류할증료와 본 시스템이 계산한 연료 원가를 산술적으로 대조한 참고 수치이며, 항공사 전체의 손익 구조나 경영 상태를 대변하지 않습니다.
+                본 서비스에서 제공하는 정보는 법적 증빙 자료로 사용할 수 없으며, 이를 바탕으로 행해진 사용자의 판단 및 예약 결과에 대해 본 서비스는 어떠한 법적 책임도 지지 않습니다.
+                <br>📧 문의: seokjoon4797@naver.com 
 
-            <div class="site-info">
-                <h3>About AIR SAVE</h3>
-                <p>
-                    <strong>설립 목적:</strong> 항공 여행객들이 복잡한 <strong>유류할증료</strong> 체계를 투명하게 이해하고, 데이터 기반 시뮬레이션을 통해 <strong>스마트한 여행 소비</strong>를 계획할 수 있도록 돕기 위해 설립되었습니다.
-                </p>
-                <p>
-                    <strong>제휴 및 업데이트 요청:</strong> 서비스 개선 제안, 데이터 오류 보고 및 제휴 문의는 아래 메일로 연락 부탁드립니다.
-                </p>
-                <p>
-                    📧 <a href="mailto:seokjoon4797@naver.com">seokjoon4797@naver.com</a>
-                </p>
+                본 페이지는 제휴 마케팅 활동의 일환으로, 결과창의 예약 링크를 통해 발생하는 클릭이나 구매에 대해 일정액의 수수료를 제공받을 수 있음을 공정위 가이드에 따라 고지합니다.
             </div>
         </div>
         <div id="map"></div>
     </div>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         let map = L.map('map', { worldCopyJump: true }).setView([30, 160], 2);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
-        let line, m1, m2;
-
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString('ko-KR', {hour12: false});
-        }
+        let pathLayer, m1, m2;
+        function updateClock() { document.getElementById('clock').innerText = new Date().toLocaleTimeString('ko-KR', {hour12: false}); }
         setInterval(updateClock, 1000);
-
-        // 수익형 링크 함수
-        function goSkyscanner() { window.open(`https://trip.tp.st/8W6fVv1Y?_marker=518542`, '_blank'); }
-        function goAgoda() { window.open(`https://klook.tp.st/ZlE8O7mN?_marker=518542`, '_blank'); }
-
+        window.onload = function() { if(document.getElementById('dep').value && document.getElementById('arr').value) setTimeout(analyze, 500); };
+        function shareCard() { html2canvas(document.getElementById('res-box'), { backgroundColor: '#0f1123' }).then(canvas => { const link = document.createElement('a'); link.download = 'oiltax-2026.png'; link.href = canvas.toDataURL(); link.click(); }); }
         async function analyze() {
-            const dep = document.getElementById('dep').value;
-            const arr = document.getElementById('arr').value;
-            const btn = document.getElementById('sim-btn');
-
-            if(!dep || !arr) { alert("출발지와 도착지를 입력하세요!"); return; }
-
-            btn.innerText = "항로 분석 중...";
-            btn.disabled = true;
-
+            const dep = document.getElementById('dep').value; const arr = document.getElementById('arr').value;
+            if(!dep || !arr) return; const btn = document.getElementById('sim-btn'); btn.innerText = "분석 중..."; btn.disabled = true;
             try {
                 const res = await fetch(`/calculate?dep=${encodeURIComponent(dep)}&arr=${encodeURIComponent(arr)}`);
                 const data = await res.json();
-                
-                if(data.status === "error") { alert(data.message); return; }
-                
                 document.getElementById('res-box').style.display = 'block';
                 document.getElementById('rd').innerText = data.distance;
+                document.getElementById('rt').innerText = data.flight_time;
                 document.getElementById('ra').innerText = data.airplane;
-                document.getElementById('rtc').innerText = data.total_cost_display;
-                document.getElementById('rpc').innerText = data.per_person_display;
-
-                const distanceNum = parseFloat(data.distance.replace(/,/g, ''));
-                const hours = Math.floor(distanceNum / 850);
-                const minutes = Math.round(((distanceNum / 850) - hours) * 60);
-                document.getElementById('rt').innerText = `약 ${hours}시간 ${minutes}분`;
-                document.getElementById('rco2').innerText = `약 ${(distanceNum * 0.000115).toFixed(2)} 톤`;
-                
-                if(line) map.removeLayer(line);
-                if(m1) map.removeLayer(m1);
-                if(m2) map.removeLayer(m2);
-                
-                let p1 = data.coords.dep;
-                let p2 = data.coords.arr;
-                m1 = L.marker(p1).addTo(map);
-                m2 = L.marker(p2).addTo(map);
-
-                let latlngs = [p1, p2];
-                if (Math.abs(p1[1] - p2[1]) > 180) {
-                    let newLon2 = p2[1] > p1[1] ? p2[1] - 360 : p2[1] + 360;
-                    latlngs = [p1, [p2[0], newLon2]];
-                }
-                
-                line = L.polyline(latlngs, { color: '#9f66ff', weight: 3, dashArray: '10, 10' }).addTo(map);
-                map.fitBounds(line.getBounds(), {padding: [100, 100]});
-
-            } catch (e) { alert("서버 오류가 발생했습니다."); }
-            finally { btn.innerText = "시뮬레이션 시작"; btn.disabled = false; }
+                document.getElementById('rex').innerText = "₩" + data.exchange_rate + " 💵";
+                document.getElementById('rpc').innerText = data.fuel_cost_krw;
+                const bVal = document.getElementById('bagaji-val'); bVal.innerText = data.bagaji_index;
+                bVal.style.color = parseInt(data.bagaji_index) > 200 ? '#ff4d4d' : '#9f66ff';
+                if(pathLayer) map.removeLayer(pathLayer); if(m1) map.removeLayer(m1); if(m2) map.removeLayer(m2);
+                m1 = L.marker(data.coords.dep).addTo(map); m2 = L.marker(data.coords.arr).addTo(map);
+                let latlngs = [data.coords.dep, data.coords.arr];
+                if (Math.abs(data.coords.dep[1] - data.coords.arr[1]) > 180) { latlngs = [data.coords.dep, [data.coords.arr[0], data.coords.arr[1] > data.coords.dep[1] ? data.coords.arr[1] - 360 : data.coords.arr[1] + 360]]; }
+                pathLayer = L.polyline.antPath(latlngs, { delay: 2500, dashArray: [10, 20], weight: 5, color: '#9f66ff', pulseColor: '#fff' }).addTo(map);
+                map.fitBounds(pathLayer.getBounds(), {padding: [50, 50]});
+                document.getElementById('carbon-val').innerText = `${(parseFloat(data.distance.replace(/[^0-9.]/g, '')) * 0.115).toFixed(1)} kg`;
+            } catch (e) { alert("오류 발생"); } finally { btn.innerText = "항공권 가격 검증하기"; btn.disabled = false; }
         }
     </script>
 </body>
