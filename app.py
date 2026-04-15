@@ -1,6 +1,6 @@
 import time
+import csv
 import requests
-import pandas as pd
 import os
 import math
 import sqlite3
@@ -68,10 +68,21 @@ def load_airports():
     try:
         base_path = os.path.dirname(__file__)
         csv_path = os.path.join(base_path, 'locations.csv')
-        if os.path.exists(csv_path):
-            df = pd.read_csv(csv_path)
-            return df.drop_duplicates(subset=['iata']).set_index('iata').to_dict('index')
-        return {}
+        if not os.path.exists(csv_path):
+            return {}
+        airports = {}
+        with open(csv_path, newline='', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                iata = row.get('iata')
+                if not iata or iata in airports:
+                    continue
+                airports[iata] = {
+                    'name': row['name'],
+                    'lat': float(row['lat']),
+                    'lon': float(row['lon']),
+                }
+        return airports
     except: return {}
 
 AIRPORTS_DB = load_airports()
